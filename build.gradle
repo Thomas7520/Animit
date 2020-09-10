@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+
+
+group 'com.thomas7520.animit'
+version '1.0-SNAPSHOT'
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+    compile group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '6.0.0'
+
+}
+
+
+shadowJar {
+    dependencies {
+        exclude(dependency('com.github.jengelman.gradle.plugins:shadow:6.0.0'))
+        exclude(dependency('org.apache.logging.log4j:log4j-core:.*'))
+
+    }
+}
+
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.thomas7520.animit.Animit"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
